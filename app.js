@@ -1,11 +1,3 @@
-/* 
-- Armar la paginación
-- Que en base a la página, se muestren los títulos de las pelis de cada una
-
-
-
-*/
-
 let $moviesDisplay = document.querySelector("#moviesDisplay");
 let $btnPrevious = document.querySelector("#btnPrevious");
 let $btnNext = document.querySelector("#btnNext");
@@ -18,7 +10,7 @@ let currentPage = 1;
 const getMovies = async () => {
   try {
     let resMovies = await axios(`https://api.themoviedb.org/3/movie/popular?api_key=1b56e23f6b4c00afff1adb45fae112b8&language=es-MX&page=${currentPage}`);
-
+    console.log(resMovies.data);
     let movies = resMovies.data.results;
 
     let $fragment = document.createDocumentFragment();
@@ -33,8 +25,11 @@ const getMovies = async () => {
 
     movies.forEach((movie) => {
       let $movie = document.createElement("div");
-      $movie.classList.add("col-6");
-      $movie.innerHTML = `<p>${movie.title}</p>`;
+      $movie.classList.add("col-12", "col-sm-6", "col-md-4", "col-lg-3", "my-3");
+      $movie.innerHTML = `
+      <img src="https://image.tmdb.org/t/p/w200/${movie.poster_path}"/>
+      <p>${movie.title}</p>
+      `;
       $fragment.appendChild($movie);
     });
 
@@ -46,7 +41,6 @@ const getMovies = async () => {
 
 document.addEventListener("click", (e) => {
   if (e.target.matches("#btnPrevious")) {
-    console.log("anterior");
     if (currentPage > 1) {
       currentPage--;
       getMovies();
@@ -54,7 +48,6 @@ document.addEventListener("click", (e) => {
   }
 
   if (e.target.matches("#btnNext")) {
-    console.log("siguiente");
     if (currentPage < 500) {
       currentPage++;
       getMovies();
@@ -72,4 +65,6 @@ document.addEventListener("click", (e) => {
   }
 });
 
-getMovies();
+document.addEventListener("DOMContentLoaded", () => {
+  getMovies();
+});
